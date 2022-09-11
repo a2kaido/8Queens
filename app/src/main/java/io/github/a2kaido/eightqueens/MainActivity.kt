@@ -46,11 +46,11 @@ fun ChessBoard(
     LazyVerticalGrid(
         columns = GridCells.Fixed(8)
     ) {
-        state.pieces.forEachIndexed { y, row ->
+        state.board.forEachIndexed { y, row ->
             itemsIndexed(row) { x, cell ->
                 val putQueen2 = remember { putQueen(x, y) }
                 Cell(
-                    text = cell,
+                    text = cell.toDisplay(),
                     onClickCell = putQueen2,
                 )
             }
