@@ -3,12 +3,15 @@ package io.github.a2kaido.eightqueens
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.material.Button
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -43,17 +46,23 @@ fun ChessBoard(
     val state = viewModel.state
     val putQueen = remember { { x: Int, y: Int -> { viewModel.putQueen(Point(x, y)) } } }
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(8)
-    ) {
-        state.board.forEachIndexed { y, row ->
-            itemsIndexed(row) { x, cell ->
-                val putQueen2 = remember { putQueen(x, y) }
-                Cell(
-                    text = cell.toDisplay(),
-                    onClickCell = putQueen2,
-                )
+    Column {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(8)
+        ) {
+            state.board.forEachIndexed { y, row ->
+                itemsIndexed(row) { x, cell ->
+                    val putQueen2 = remember { putQueen(x, y) }
+                    Cell(
+                        piece = cell,
+                        onClickCell = putQueen2,
+                    )
+                }
             }
+        }
+
+        Button(onClick = viewModel::back) {
+            Text("Back")
         }
     }
 }

@@ -14,25 +14,41 @@ class MainViewModel : ViewModel() {
     var state by mutableStateOf(QueensState())
         private set
 
+    private val stack: ArrayDeque<Board> = ArrayDeque()
+
     fun putQueen(point: Point) {
+        if (state.board[point.y][point.x] !is Blank) return
+
         val queenRange = Queen.moveRange(8, point)
 
-        state = state.copy(
-            board = state.board.mapIndexed { y, rows ->
-                rows.mapIndexed { x, piece ->
-                    when (Point(x, y)) {
-                        point -> {
-                            Queen
-                        }
-                        in queenRange -> {
-                            QueenRange
-                        }
-                        else -> {
-                            piece
-                        }
+        stack.add(state.board)
+
+        val newBoard = state.board.mapIndexed { y, rows ->
+            rows.mapIndexed { x, piece ->
+                when (Point(x, y)) {
+                    point -> {
+                        Queen
                     }
-                }.toList()
+                    in queenRange -> {
+                        QueenRange
+                    }
+                    else -> {
+                        piece
+                    }
+                }
             }.toList()
+        }.toList()
+
+        state = state.copy(
+            board = newBoard,
+        )
+    }
+
+    fun back() {
+        if (stack.isEmpty()) return
+
+        state = state.copy(
+            board = stack.removeLast()
         )
     }
 }
