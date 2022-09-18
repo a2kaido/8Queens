@@ -15,6 +15,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import io.github.a2kaido.eightqueens.core.Point
@@ -48,6 +49,7 @@ fun ChessBoard(
 
     Column {
         LazyVerticalGrid(
+            modifier = Modifier.testTag("board"),
             columns = GridCells.Fixed(8)
         ) {
             state.board.forEachIndexed { y, row ->
@@ -61,7 +63,10 @@ fun ChessBoard(
             }
         }
 
-        Button(onClick = viewModel::back) {
+        Button(
+            modifier = Modifier.testTag("back"),
+            onClick = viewModel::back,
+        ) {
             Text("Back")
         }
     }
