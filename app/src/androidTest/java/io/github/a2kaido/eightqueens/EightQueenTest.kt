@@ -7,6 +7,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.a2kaido.eightqueens.ui.theme.EightQueensAndroidTheme
 import org.junit.Rule
@@ -26,8 +27,17 @@ class EightQueenTest {
                 ChessBoard()
             }
         }
+        val startTime = System.currentTimeMillis()
 
         putQueen()
+        val time = System.currentTimeMillis() - startTime
+
+        val result = "${time.toString().dropLast(3)}.${time.toString().takeLast(3)}"
+        println("Result: $result")
+        inputResult(result)
+        composeTestRule.waitForIdle()
+
+        Thread.sleep(3000)
     }
 
     private fun putQueen(depth: Int = 0) {
@@ -36,30 +46,36 @@ class EightQueenTest {
             // cursorが8で終わり
             if (cursor > 7) return
 
+            // 置く場所
             val position = depth * 8 + cursor
 
+            // 置けるか確認。ダメなら隣に移動。
             if (!isEmptyNode(position = position)) {
                 cursor++
                 continue
             }
 
-            // 一個置く
+            // 置く
             putQueenAt(position = position)
 
-            // 修了条件
+            // 8個置いたら終わり
             if (countQueen() == 8) return
 
-            // 子ども呼び出し
+            // 下の段に移動
             putQueen(depth + 1)
 
-            // 修了条件
+            // 8個置いたら終わり
             if (countQueen() == 8) return
 
-            // 子どもがダメだったので1手戻して次に進む
+            // ダメだったので1手戻して次に進む
             back()
             cursor++
         }
     }
+
+    private fun inputResult(result: String) = composeTestRule
+        .onNodeWithTag("result")
+        .performTextInput(result)
 
     private fun back() = composeTestRule
         .onNodeWithTag("back")
