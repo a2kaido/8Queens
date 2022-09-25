@@ -23,21 +23,13 @@ class MainViewModel : ViewModel() {
 
         stack.add(state.board)
 
-        val newBoard = state.board.mapIndexed { y, rows ->
-            rows.mapIndexed { x, piece ->
-                when (Point(x, y)) {
-                    point -> {
-                        Queen
-                    }
-                    in queenRange -> {
-                        QueenRange
-                    }
-                    else -> {
-                        piece
-                    }
-                }
-            }.toList()
-        }.toList()
+        val newBoard = state.board.map { it.toMutableList() }.toMutableList()
+        newBoard[point.y][point.x] = Queen
+        queenRange.forEach {
+            if (newBoard[it.y][it.x] is Blank) {
+                newBoard[it.y][it.x] = QueenRange
+            }
+        }
 
         state = state.copy(
             board = newBoard,

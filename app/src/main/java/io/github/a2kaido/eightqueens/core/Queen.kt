@@ -9,7 +9,7 @@ object Queen : Piece {
     fun moveRange(boardSize: Int, position: Point): List<Point> {
         val result = mutableListOf<Point>()
 
-        for (cursor in 1..boardSize) {
+        for (cursor in 1 until boardSize) {
             listOf(
                 Point(position.x - cursor, position.y - cursor),
                 Point(position.x, position.y - cursor),
@@ -20,7 +20,7 @@ object Queen : Piece {
                 Point(position.x, position.y + cursor),
                 Point(position.x + cursor, position.y + cursor),
             ).forEach {
-                if (it.inBoard(8)) result.add(it)
+                if (it.inBoard(boardSize - 1)) result.add(it)
             }
         }
 
